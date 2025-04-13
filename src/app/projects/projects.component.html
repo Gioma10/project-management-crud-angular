@@ -1,1 +1,18 @@
-<p>projects works!</p>
+<div class="h-screen bg-[#4D6A6D] gap-12 flex flex-col justify-center items-center text-[#C5C5C5]">
+    <h1 class="text-6xl">Projects</h1>
+    <div
+        *ngFor="let project of projects"
+        class="bg-[#35595B] text-white p-6 rounded-lg shadow-lg w-min-52 flex flex-col gap-4"
+        >
+            <div class="flex flex-col gap-2">
+                <h2 class="text-2xl font-bold">{{ project.title }}</h2>
+                <p>{{ project.description }}</p>
+            </div>
+            <div class="flex gap-2">
+                <app-button [title]="'Edit'"></app-button>
+                <app-button [title]="'Details'"></app-button>
+            </div>
+    </div>
+    <app-button [title]="'Add Project +'"></app-button>
+  </div>
+
