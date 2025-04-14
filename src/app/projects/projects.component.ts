@@ -18,13 +18,13 @@ interface ProjectResponse {
 })
 export class ProjectsComponent {
   projects: any[] = [];
-  showForm = false; // Variabile per controllare il form
+  showForm = false; // Controlla la visibilità del form
+  selectedProject: any = null; // Progetto da modificare
 
   constructor(private projectService: ProjectService) {}
 
   ngOnInit(): void {
     this.projectService.getProjects().subscribe((data: ProjectResponse) => {
-      // console.log(data);
       this.projects = data.projects;
     });
   }
@@ -33,7 +33,6 @@ export class ProjectsComponent {
   deleteProject(projectId: string): void {
     this.projectService.deleteProject(projectId).subscribe(
       (response) => {
-        // Rimuovi il progetto dalla lista localmente dopo l'eliminazione
         this.projects = this.projects.filter(project => project.id !== projectId);
         console.log('Progetto eliminato con successo', response);
       },
@@ -43,34 +42,68 @@ export class ProjectsComponent {
     );
   }
 
-  // Metodo per alternare la visibilità del form
+  // Alterna la visibilità del form e resetta il progetto selezionato se necessario
   toggleForm(): void {
     this.showForm = !this.showForm;
-    console.log(this.showForm);
-    
+    if (!this.showForm) {
+      this.selectedProject = null;
+    }
+    console.log('showForm:', this.showForm);
   }
 
-  // Metodo per aggiungere un progetto
-  addProject(project: { name: string, description: string }) {
-    const newProject = {
-      title: project.name,
-      description: project.description
-    };
+  // Funzione per gestire il salvataggio (sia per aggiunta che per aggiornamento)
+  saveProject(project: { id?: string, name: string, description: string }) {
+    if (project.id) {
+      // Caso update: invia una richiesta PUT al backend
+      this.projectService.updateProject(project.id, {
+        title: project.name,
+        description: project.description
+      }).subscribe({
+        next: (response) => {
+          // Aggiorna l'array locale
+          const index = this.projects.findIndex(p => p.id === project.id);
+          if (index !== -1) {
+            // Qui puoi decidere se sostituire l'intero oggetto o solo aggiornare le proprietà che ti interessano
+            this.projects[index] = { ...this.projects[index], title: project.name, description: project.description };
+          }
+          console.log('Progetto aggiornato con successo', response);
+          this.toggleForm();
+        },
+        error: (err) => {
+          console.error('Errore nell\'aggiornamento del progetto:', err);
+        }
+      });
+    } else {
+      // Caso add: invia una richiesta POST al backend
+      const newProject = {
+        title: project.name,
+        description: project.description
+      };
   
-    this.projectService.addProject(newProject).subscribe({
-      next: (savedProject) => {
-        this.projects.push(savedProject); // Aggiungilo all’elenco locale
-        this.toggleForm(); // Nascondi il form
-      },
-      error: (err) => {
-        console.error('Errore nel salvataggio:', err);
-      }
-    });
+      this.projectService.addProject(newProject).subscribe({
+        next: (savedProject) => {
+          this.projects.push(savedProject);
+          console.log('Progetto aggiunto con successo', savedProject);
+          this.toggleForm();
+        },
+        error: (err) => {
+          console.error('Errore nel salvataggio del progetto:', err);
+        }
+      });
+    }
   }
-  
 
   // Metodo per annullare il form
   cancelForm() {
     this.showForm = false;
+    this.selectedProject = null;
+  }
+
+  // Metodo per selezionare un progetto da modificare e mostrare il form
+  editProject(project: any) {
+    this.selectedProject = project;
+    if (!this.showForm) {
+      this.toggleForm();
+    }
   }
 }

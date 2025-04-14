@@ -2,8 +2,17 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 
-interface ProjectResponse {
-  projects: any[]; // O sostituisci 'any' con il tipo specifico se conosci la struttura dei progetti
+// Interfaccia per un singolo progetto
+export interface Project {
+  id?: string;
+  title: string;
+  description: string;
+  createdAt?: string;
+}
+
+// Interfaccia per la risposta della chiamata GET che restituisce una lista di progetti
+export interface ProjectResponse {
+  projects: Project[];
 }
 
 @Injectable({
@@ -14,22 +23,28 @@ export class ProjectService {
 
   constructor(private http: HttpClient) {}
 
-  // Visualizza i progetti
+  // Recupera l'elenco dei progetti
   getProjects(): Observable<ProjectResponse> {
     return this.http.get<ProjectResponse>(this.apiUrl);
   }
 
-  // Aggiunge un progetto
-  addProject(project: { title: string; description: string }): Observable<any> {
-    return this.http.post<any>(this.apiUrl, project);
+  // Aggiunge un nuovo progetto (POST)
+  addProject(project: { title: string; description: string }): Observable<Project> {
+    return this.http.post<Project>(this.apiUrl, project);
   }
 
-  // Elimina un progetto
+  // Elimina un progetto dato il suo ID (DELETE)
   deleteProject(projectId: string): Observable<any> {
     return this.http.delete(`${this.apiUrl}/${projectId}`);
   }
 
-  getProjectById(id: string): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${id}`);
+  // Recupera i dettagli di un singolo progetto per ID (GET)
+  getProjectById(id: string): Observable<Project> {
+    return this.http.get<Project>(`${this.apiUrl}/${id}`);
+  }
+
+  // Aggiorna un progetto esistente (PUT)
+  updateProject(projectId: string, projectData: { title: string; description: string }): Observable<any> {
+    return this.http.put(`${this.apiUrl}/${projectId}`, projectData);
   }
 }

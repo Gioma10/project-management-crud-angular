@@ -1,28 +1,35 @@
 <div class="h-screen bg-[#4D6A6D] gap-12 flex flex-col justify-center items-center text-[#C5C5C5]">
-    <h1 class="text-6xl">Projects</h1>
+  <h1 class="text-6xl">Projects</h1>
   
-    <div class="flex gap-10">
-      <div *ngFor="let project of projects" class="bg-[#35595B] group text-white p-6 rounded-lg shadow-lg w-min-52 flex flex-col gap-4 relative">
-        <div 
-          (click)="deleteProject(project.id)"
-          class="absolute top-2 right-2 hidden group-hover:block hover:text-red-600 transition-all duration-300 cursor-pointer">
-          <mat-icon>clearicon</mat-icon>
-        </div>
-        <div class="flex flex-col gap-2">
-          <h2 class="text-2xl font-bold">{{ project.title }}</h2>
-          <p>{{ project.description }}</p>
-        </div>
-        <div class="flex gap-2">
-          <app-button [title]="'Edit'"></app-button>
-          <app-button [title]="'Details'" [route]="'/projects/' + project.id"></app-button>
-        </div>
+  <div class="flex gap-10">
+    <div *ngFor="let project of projects" class="bg-[#35595B] group text-white p-6 rounded-lg shadow-lg w-min-52 flex flex-col gap-4 relative">
+      <!-- Bottone per eliminare -->
+      <div 
+        (click)="deleteProject(project.id)"
+        class="absolute top-2 right-2 hidden group-hover:block hover:text-red-600 transition-all duration-300 cursor-pointer">
+        <mat-icon>clear</mat-icon>
+      </div>
+      <div class="flex flex-col gap-2">
+        <h2 class="text-2xl font-bold">{{ project.title }}</h2>
+        <p>{{ project.description }}</p>
+      </div>
+      <div class="flex gap-2">
+        <!-- Bottone Edit: chiama editProject() con i dati del progetto -->
+        <app-button [title]="'Edit'" (clicked)="editProject(project)"></app-button>
+        <!-- Bottone Details: naviga alla pagina dei dettagli -->
+        <app-button [title]="'Details'" [route]="'/projects/' + project.id"></app-button>
       </div>
     </div>
+  </div>
   
-    <!-- Pulsante per aprire il form -->
-    <app-button *ngIf="!showForm" [title]="'Add Project +'" (clicked)="toggleForm()"></app-button>
+  <!-- Pulsante per aprire il form in modalità aggiunta (senza progetto selezionato) -->
+  <app-button *ngIf="!showForm" [title]="'Add Project +'" (clicked)="toggleForm()"></app-button>
   
-    <!-- Mostra form solo se showForm è true -->
-    <app-form *ngIf="showForm" (save)="addProject($event)" (cancel)="cancelForm()"></app-form>
+  <!-- Form per aggiunta/aggiornamento: passa il progetto selezionato (se presente) -->
+  <app-form
+    *ngIf="showForm"
+    [project]="selectedProject"
+    (save)="saveProject($event)"
+    (cancel)="cancelForm()">
+  </app-form>
 </div>
-  

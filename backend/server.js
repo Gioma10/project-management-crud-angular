@@ -102,7 +102,7 @@ app.delete('/api/projects/:id', async (req, res) => {
   }
 });
 
-// Endpoint per eliminare un progetto
+// Endpoint per modificare un progetto
 app.put('/api/projects/:id', async (req, res) => {
   const projectId = req.params.id; // Ottieni l'ID dal parametro dell'URL
   const updatedProject = req.body; // I dati aggiornati vengono passati nel body della richiesta
