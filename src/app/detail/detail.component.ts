@@ -143,4 +143,10 @@ export class ProjectDetailComponent implements OnInit {
   cancelForm() {
     this.showForm = false;
   }
+
+  completedTask(task:any): void {
+    task.completed = !task.completed
+    console.log(task.completed);
+    
+  }
 }

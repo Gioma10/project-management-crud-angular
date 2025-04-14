@@ -11,8 +11,10 @@
                 
                 <p *ngIf="tasks.length === 0">There aren't tasks yet...</p>
 
-                <div *ngFor="let task of tasks" class="relative group">
+                <div *ngFor="let task of tasks; let i = index" class="relative group">
                     <li 
+                        (click)="completedTask(task)"
+                        [ngClass]="{ 'line-through text-white/30': task.completed }"
                         class="cursor-pointer z-10 p-2 rounded-xl shadow hover:shadow-white transition-all duration-200">
                         {{task.title}}
                     </li>
