@@ -1,4 +1,3 @@
-import { Cancel } from './../../../backend/node_modules/axios/index.d';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ProjectService } from '../services/project.service';
@@ -16,6 +15,7 @@ import { CommonModule } from '@angular/common';
 export class ProjectDetailComponent implements OnInit {
   showForm:boolean = false;
   projectId: string | null = '';
+  tasks: any[] = []; // Array per le task (senza modello separato)
   project: any = {};  // Per memorizzare i dati del progetto
 
   constructor(
@@ -29,6 +29,7 @@ export class ProjectDetailComponent implements OnInit {
     
     if (this.projectId) {
       this.getProjectDetails(this.projectId); // Recupera i dettagli del progetto
+      this.loadTasks(); // Carica le task relative al progetto
     }
   }
 
@@ -43,6 +44,30 @@ export class ProjectDetailComponent implements OnInit {
       }
     );
   }
+
+  // Carica le task del progetto
+  loadTasks(): void {
+    if (this.projectId) {
+      this.projectService.getTasksForProject(this.projectId).subscribe(
+        (response) => {
+          // Accedi all'array di task all'interno della risposta
+          if (Array.isArray(response.tasks)) {
+            this.tasks = response.tasks;  // Assegna l'array di task al nostro array
+            console.log('Task caricate:', this.tasks);
+          } else {
+            console.error('Errore: la proprietà "tasks" non è un array', response);
+            this.tasks = [];  // Imposta un array vuoto come fallback
+          }
+        },
+        (error) => {
+          console.error('Errore nel recupero delle task:', error);
+        }
+      );
+    }
+  }
+  
+
+  
 
   createTask(taskData: { name: string }) {
     const task = {

@@ -48,6 +48,11 @@ export class ProjectService {
     return this.http.put(`${this.apiUrl}/${projectId}`, projectData);
   }
 
+  // Ottieni le task per un progetto
+  getTasksForProject(id: string) {
+    return this.http.get<any>(`${this.apiUrl}/${id}/tasks`);
+  }
+  
   //Aggiungi task
   addTask(projectId: string, task: any) {
     return this.http.post(`${this.apiUrl}/${projectId}/tasks`, task);

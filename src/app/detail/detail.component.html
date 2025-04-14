@@ -9,12 +9,12 @@
             <h3>Tasks</h3>
             <ol class="border rounded-xl py-5 px-12 min-w-52 h-min-52 list-decimal list-inside flex flex-col gap-5">
                 
-                <p>There aren't tasks yet...</p>
+                <p *ngIf="tasks.length === 0">There aren't tasks yet...</p>
 
-                <!-- <div class="relative group">
+                <div *ngFor="let task of tasks" class="relative group">
                     <li 
                         class="cursor-pointer z-10 p-2 rounded-xl shadow hover:shadow-white transition-all duration-200">
-                        
+                        {{task.title}}
                     </li>
                     <div class="cursor-pointer opacity-0 group-hover:opacity-100 hover:text-red-700 absolute top-1/2 -translate-y-[50%] w-8 right-0 group-hover:translate-x-8 transition-all duration-300">
                         <mat-icon>clear</mat-icon>
@@ -22,7 +22,7 @@
                     <div class="cursor-pointer opacity-0 group-hover:opacity-100 hover:text-yellow-500 absolute top-1/2 -translate-y-[50%] w-8 left-0 group-hover:-translate-x-8 transition-all duration-300">
                         <mat-icon>edit</mat-icon>
                     </div>
-                </div>     -->
+                </div>    
             </ol>
 
             <app-button [title]="'Add Task'" (clicked)="toggleForm()"></app-button>

@@ -132,13 +132,13 @@ app.put('/api/projects/:id', async (req, res) => {
 
 
 // Endpoint per ottenere i task di un progetto
-app.get("/api/projects/:id/tasks", async (req, res) => {
-  const { id } = req.params;
+app.get("/api/projects/:projectId/tasks", async (req, res) => {
+  const { projectId } = req.params;
 
   try {
     const tasksSnapshot = await db
       .collection("projects")
-      .doc(id)
+      .doc(projectId)
       .collection("tasks")
       .get();
 
@@ -160,23 +160,28 @@ app.post("/api/projects/:projectId/tasks", async (req, res) => {
   const { title } = req.body;
 
   try {
+    // Impostiamo il valore di "completed" su false di default
     const task = {
       title,
+      completed: false, // Aggiungiamo completed
       createdAt: admin.firestore.FieldValue.serverTimestamp(),
     };
 
+    // Salviamo la task nel database
     const taskRef = await db
       .collection("projects")
       .doc(projectId)
       .collection("tasks")
       .add(task);
 
+    // Restituiamo una risposta con l'ID e i dettagli della task
     res.status(201).json({ id: taskRef.id, ...task });
   } catch (error) {
     console.error("Error creating task:", error);
     res.status(500).json({ error: "Failed to create task" });
   }
 });
+
 
 
 
