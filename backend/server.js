@@ -40,6 +40,26 @@ app.get('/api/projects', async (req, res) => {
   }
 });
 
+// Endpoint per creare un nuovo progetto
+app.post('/api/projects', async (req, res) => {
+  const { title, description } = req.body;
+
+  try {
+    const newProject = {
+      title,
+      description,
+      createdAt: admin.firestore.FieldValue.serverTimestamp()
+    };
+
+    const docRef = await db.collection('projects').add(newProject);
+
+    res.status(201).json({ id: docRef.id, ...newProject });
+  } catch (error) {
+    console.error('Error adding project:', error);
+    res.status(500).json({ error: 'Failed to add project' });
+  }
+});
+
 
 // Endpoint per ottenere i dettagli di un singolo progetto
 app.get('/api/projects/:id', async (req, res) => {
