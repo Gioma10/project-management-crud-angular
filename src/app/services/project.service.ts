@@ -14,11 +14,18 @@ export class ProjectService {
 
   constructor(private http: HttpClient) {}
 
+  // Visualizza i progetti
   getProjects(): Observable<ProjectResponse> {
     return this.http.get<ProjectResponse>(this.apiUrl);
   }
 
+  // Aggiunge un progetto
   addProject(project: { title: string; description: string }): Observable<any> {
     return this.http.post<any>(this.apiUrl, project);
+  }
+
+  // Elimina un progetto
+  deleteProject(projectId: string): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/${projectId}`);
   }
 }

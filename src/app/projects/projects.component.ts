@@ -1,3 +1,4 @@
+import { MatIconModule } from '@angular/material/icon';
 import { Component } from '@angular/core';
 import { ProjectService } from '../services/project.service';
 import { ButtonComponent } from "../components/button/button.component";
@@ -11,7 +12,7 @@ interface ProjectResponse {
 @Component({
   selector: 'app-projects',
   standalone: true,
-  imports: [CommonModule, ButtonComponent, FormComponent],
+  imports: [CommonModule, ButtonComponent, FormComponent, MatIconModule],
   templateUrl: './projects.component.html',
   styleUrls: ['./projects.component.css']
 })
@@ -26,6 +27,20 @@ export class ProjectsComponent {
       // console.log(data);
       this.projects = data.projects;
     });
+  }
+
+  // Metodo per eliminare un progetto
+  deleteProject(projectId: string): void {
+    this.projectService.deleteProject(projectId).subscribe(
+      (response) => {
+        // Rimuovi il progetto dalla lista localmente dopo l'eliminazione
+        this.projects = this.projects.filter(project => project.id !== projectId);
+        console.log('Progetto eliminato con successo', response);
+      },
+      (error) => {
+        console.error('Errore nell\'eliminazione del progetto', error);
+      }
+    );
   }
 
   // Metodo per alternare la visibilità del form
@@ -52,6 +67,7 @@ export class ProjectsComponent {
       }
     });
   }
+  
 
   // Metodo per annullare il form
   cancelForm() {
