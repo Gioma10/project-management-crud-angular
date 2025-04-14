@@ -14,7 +14,7 @@
         </div>
         <div class="flex gap-2">
           <app-button [title]="'Edit'"></app-button>
-          <app-button [title]="'Details'"></app-button>
+          <app-button [title]="'Details'" [route]="'/projects/' + project.id"></app-button>
         </div>
       </div>
     </div>
@@ -24,5 +24,5 @@
   
     <!-- Mostra form solo se showForm è true -->
     <app-form *ngIf="showForm" (save)="addProject($event)" (cancel)="cancelForm()"></app-form>
-  </div>
+</div>
   
