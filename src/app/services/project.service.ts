@@ -53,8 +53,18 @@ export class ProjectService {
     return this.http.get<any>(`${this.apiUrl}/${id}/tasks`);
   }
   
-  //Aggiungi task
+  // Aggiunge le task
   addTask(projectId: string, task: any) {
     return this.http.post(`${this.apiUrl}/${projectId}/tasks`, task);
+  }
+
+  // Aggiorna le task
+  updateTask(projectId: string, taskId: string, task: any) {
+    return this.http.put<{ message: string }>(`${this.apiUrl}/${projectId}/tasks/${taskId}`, task);
+  }
+
+  //Elimina le task
+  deleteTask(projectId: string, taskId: string) {
+    return this.http.delete<any>(`${this.apiUrl}/${projectId}/tasks/${taskId}`);
   }
 }

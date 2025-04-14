@@ -17,6 +17,7 @@ export class ProjectDetailComponent implements OnInit {
   projectId: string | null = '';
   tasks: any[] = []; // Array per le task (senza modello separato)
   project: any = {};  // Per memorizzare i dati del progetto
+  editingTask: any = null;
 
   constructor(
     private route: ActivatedRoute,
@@ -83,10 +84,52 @@ export class ProjectDetailComponent implements OnInit {
       next: (res) => {
         console.log('Task salvata:', res);
         this.showForm = false;
-        // Se hai una funzione che ricarica la lista delle task, chiamala qui
-        // this.loadTasks();
+        this.loadTasks();
       },
       error: (err) => console.error('Errore nel salvataggio task:', err)
+    });
+  }
+  editTask(task: any): void {
+    this.editingTask = task;
+    this.showForm = true;
+  }
+
+  updateTask(taskData: { name: string }): void {
+    if (!this.projectId || !this.editingTask) {
+      console.error('Project ID o Task mancante!');
+      return;
+    }
+  
+    const updatedTask = {
+      ...this.editingTask,
+      title: taskData.name
+    };
+  
+    this.projectService.updateTask(this.projectId, this.editingTask.id, updatedTask).subscribe({
+      next: () => {
+        console.log('Task aggiornata');
+        this.loadTasks();
+        this.showForm = false;
+        this.editingTask = null;
+      },
+      error: (err) => console.error('Errore aggiornamento task:', err)
+    });
+  }
+
+  // Funzione per eliminare una task
+  deleteTask(taskId: string): void {
+    if (!this.projectId) {
+      console.error('Project ID mancante!');
+      return;
+    }
+
+    this.projectService.deleteTask(this.projectId, taskId).subscribe({
+      next: () => {
+        console.log('Task eliminata');
+        // Rimuovi la task dalla lista
+        this.tasks = this.tasks.filter(task => task.id !== taskId);
+      },
+      error: (err) => console.error('Errore nell\'eliminazione della task:', err)
     });
   }
 
