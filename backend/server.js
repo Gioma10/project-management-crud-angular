@@ -154,6 +154,32 @@ app.get("/api/projects/:id/tasks", async (req, res) => {
   }
 });
 
+// Endpoint per creare una nuova task in un progetto
+app.post("/api/projects/:projectId/tasks", async (req, res) => {
+  const { projectId } = req.params;
+  const { title } = req.body;
+
+  try {
+    const task = {
+      title,
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
+    };
+
+    const taskRef = await db
+      .collection("projects")
+      .doc(projectId)
+      .collection("tasks")
+      .add(task);
+
+    res.status(201).json({ id: taskRef.id, ...task });
+  } catch (error) {
+    console.error("Error creating task:", error);
+    res.status(500).json({ error: "Failed to create task" });
+  }
+});
+
+
+
 // Endpoint per eliminare una task di un progetto
 app.delete("/api/projects/:projectId/tasks/:taskId", async (req, res) => {
   const { projectId, taskId } = req.params;  // Ottieni gli ID del progetto e della task dai parametri della URL

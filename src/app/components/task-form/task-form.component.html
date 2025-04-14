@@ -1,0 +1,24 @@
+<div class="fixed top-0 left-0 flex justify-center items-center h-full w-full bg-black/30 backdrop-blur-sm">
+    <div class="form-container p-6 min-w-1/2 bg-[#35595B] text-white rounded-lg shadow-lg">
+      <h2 class="text-3xl font-semibold mb-6">Add Task</h2>
+      <form (submit)="onSave($event)" class="space-y-4">
+        <div class="form-group">
+          <label for="title" class="block text-lg font-medium">Name</label>
+          <input type="text" id="title" name="name" [(ngModel)]="taskName" required
+                 class="w-full p-3 mt-2 border border-gray-300 rounded-lg focus:outline-none" />
+        </div>
+        <div class="flex gap-2">
+          <app-button
+            [title]="'Cancel'"
+            (clicked)="onCancel()"
+            >
+          </app-button>
+          <button type="submit"
+          class="border px-3 py-1 rounded-xl shadow hover:shadow-white transition-all duration-200 cursor-pointer">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+  

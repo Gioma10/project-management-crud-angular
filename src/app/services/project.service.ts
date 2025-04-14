@@ -47,4 +47,9 @@ export class ProjectService {
   updateProject(projectId: string, projectData: { title: string; description: string }): Observable<any> {
     return this.http.put(`${this.apiUrl}/${projectId}`, projectData);
   }
+
+  //Aggiungi task
+  addTask(projectId: string, task: any) {
+    return this.http.post(`${this.apiUrl}/${projectId}/tasks`, task);
+  }
 }
