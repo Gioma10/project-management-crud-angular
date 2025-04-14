@@ -38,7 +38,7 @@ export class ProjectDetailComponent implements OnInit {
     this.projectService.getProjectById(id).subscribe(
       (data) => {
         this.project = data;
-        console.log('Dati progetto:', this.project);
+        // console.log('Dati progetto:', this.project);
       },
       (error) => {
         console.error('Errore nel recupero del progetto', error);
@@ -54,7 +54,7 @@ export class ProjectDetailComponent implements OnInit {
           // Accedi all'array di task all'interno della risposta
           if (Array.isArray(response.tasks)) {
             this.tasks = response.tasks;  // Assegna l'array di task al nostro array
-            console.log('Task caricate:', this.tasks);
+            // console.log('Task caricate:', this.tasks);
           } else {
             console.error('Errore: la proprietà "tasks" non è un array', response);
             this.tasks = [];  // Imposta un array vuoto come fallback
@@ -146,7 +146,7 @@ export class ProjectDetailComponent implements OnInit {
 
   completedTask(task:any): void {
     task.completed = !task.completed
-    console.log(task.completed);
+    // console.log(task.completed);
     
   }
 }
